@@ -4,8 +4,8 @@ import * as crypto from 'crypto';
 import * as net from 'net';
 
 // Local Files
-import { State, HandshakePackets, StatusPackets, makePacket, logPacket } from './commons';
-import { StatusResponsePacket } from './packet';
+import { State, HandshakePackets, StatusPackets, makePacket, logPacket, LoginPackets, PlayPackets } from './commons';
+import { LoginSuccessPacket, StatusResponsePacket } from './packet';
 
 const server = new net.Server();
 
@@ -19,6 +19,7 @@ server.on('connection', (s) => {
     });
 
     s.on('data', (d) => {
+        if(d[0] == 0xFE) return;
         let offset = 0;
 
         const length = varint.decode(d, offset); offset+=varint.decode.bytes;
@@ -48,10 +49,9 @@ server.on('connection', (s) => {
             case State.STATUS: {
                 switch(id as StatusPackets) {
                     case StatusPackets.RequestPacket: {
-                        makePacket(0x00, [ StatusResponsePacket({
+                        s.write(makePacket(0x00, [ StatusResponsePacket({
                             description: { text: 'hi' },
                             enforcesSecureChat: false,
-                            favicon: '',
                             players: {
                                 max: 10,
                                 online: 0,
@@ -62,15 +62,30 @@ server.on('connection', (s) => {
                                 name: "1.16.5",
                                 protocol: 754
                             }
-                        }) ], state);
+                        }) ], state));
+                    break; }
+
+                    case StatusPackets.PingPacket: {
+                        s.write(makePacket(0x01, [ d.subarray(offset, offset+8) ], state));
                     break; }
                 }
             break; }
             
             case State.LOGIN:
+                switch(id as LoginPackets) {
+                    case LoginPackets.LoginStartPacket: {
+                        const usernameLength = varint.decode(d, offset); offset+=varint.decode.bytes;
+                        const username = d.subarray(offset, offset+usernameLength).toString(); offset+=usernameLength;
+
+                        s.write(makePacket(LoginPackets.LoginSuccessPacket, [ LoginSuccessPacket(username, uuid) ], state));
+                    break; }
+                }
             break;
             
             case State.PLAY:
+                switch(id as PlayPackets) {
+                    
+                }
             break;
         }
     });

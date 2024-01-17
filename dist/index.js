@@ -39,6 +39,8 @@ server.on('connection', (s) => {
         console.log(`-------------------------------------------------------------`);
     });
     s.on('data', (d) => {
+        if (d[0] == 0xFE)
+            return;
         let offset = 0;
         const length = varint.decode(d, offset);
         offset += varint.decode.bytes;
@@ -68,10 +70,9 @@ server.on('connection', (s) => {
             case commons_1.State.STATUS: {
                 switch (id) {
                     case commons_1.StatusPackets.RequestPacket: {
-                        (0, commons_1.makePacket)(0x00, [(0, packet_1.StatusResponsePacket)({
+                        s.write((0, commons_1.makePacket)(0x00, [(0, packet_1.StatusResponsePacket)({
                                 description: { text: 'hi' },
                                 enforcesSecureChat: false,
-                                favicon: '',
                                 players: {
                                     max: 10,
                                     online: 0,
@@ -82,15 +83,31 @@ server.on('connection', (s) => {
                                     name: "1.16.5",
                                     protocol: 754
                                 }
-                            })], state);
+                            })], state));
+                        break;
+                    }
+                    case commons_1.StatusPackets.PingPacket: {
+                        s.write((0, commons_1.makePacket)(0x01, [d.subarray(offset, offset + 8)], state));
                         break;
                     }
                 }
                 break;
             }
             case commons_1.State.LOGIN:
+                switch (id) {
+                    case commons_1.LoginPackets.LoginStartPacket: {
+                        const usernameLength = varint.decode(d, offset);
+                        offset += varint.decode.bytes;
+                        const username = d.subarray(offset, offset + usernameLength).toString();
+                        offset += usernameLength;
+                        s.write((0, commons_1.makePacket)(commons_1.LoginPackets.LoginSuccessPacket, [(0, packet_1.LoginSuccessPacket)(username, uuid)], state));
+                        break;
+                    }
+                }
                 break;
             case commons_1.State.PLAY:
+                switch (id) {
+                }
                 break;
         }
     });
