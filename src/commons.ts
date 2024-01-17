@@ -77,7 +77,22 @@ export enum LoginPackets {
 }
 
 export enum PlayPackets {
-
+    SpawnEntityPacket, SpawnExperienceOrbPacket, SpawnLivingEntityPacket, SpawnPaintingPacket, SpawnPlayerPacket,
+    EntityAnimationPacket, StatisticsPacket, AcknowledgePlayerDiggingPacket, BlockBreakAnimationPacket, BlockEntityDataPacket,
+    BlockActionPacket, BlockChangePacket, BossBarPacket, ServerDifficultyPacket, ChatMessagePacket, TabCompletePacket,
+    DeclareCommandsPacket, WindowConfirmationPacket, CloseWindowPacket, WindowItemsPacket, WindowPropertyPacket, SetSlotPacket,
+    SetCooldownPacket, PluginMessagePacket, NamedSoundEffectPacket, DisconnectPacket, EntityStatusPacket, ExplosionPacket,
+    UnloadChunkPacket, ChangeGameStatePacket, OpenHorseWindowPacket, KeepAlivePacket, ChunkDataPacket, EffectPacket, ParticlePacket,
+    UpdateLightPacket, JoinGamePacket, MapDataPacket, TradeListPacket, EntityPositionPacket, EntityPositionAndRotationPacket,
+    EntityRotationPacket, EntityMovementPacket, VehicleMovePacket, OpenBookPacket, OpenWindowPacket, OpenSignEditorPacket,
+    CraftRecipeResponsePacket, PlayerAbilitiesPacket, CombatEventPacket, PlayerInfoPacket, FacePlayerPacket, PlayerPositionAndLookPacket,
+    UnlockRecipesPacket, DestroyEntitiesPacket, RemoveEntityEffectPacket, ResourcePackSendPacket, RespawnPacket, EntityHeadLookPacket,
+    MultiBlockChangePacket, SelectAdvancementTabPacket, WorldBorderPacket, CameraPacket, HeldItemChangePacket, UpdateViewPositionPacket,
+    UpdateViewDistancePacket, SpawnPositionPacket, DisplayScoreboardPacket, EntityMetadataPacket, AttachEntityPacket, EntityVelocityPacket,
+    EntityEquipmentPacket, SetExperiencePacket, UpdateHealth, ScoreboardObjectivePacket, SetPassengersPacket, TeamsPacket, UpdateScorePacket,
+    TimeUpdatePacket, TitlePacket, EntitySoundEffectPacket, SoundEffectPacket, StopSoundPacket, PlayerListHeaderAndFooter,
+    NBTQueryResponsePacket, CollectItemPacket, EntityTeleportPacket, AdvancementsPacket, EntityPropertiesPacket, EntityEffectPacket,
+    DeclareRecipesPacket, TagsPacket
 }
 
 export function makePacket(id: number, sections: (Buffer|number[])[], status: State) {

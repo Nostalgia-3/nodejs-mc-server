@@ -13,8 +13,11 @@ server.on('connection', (s) => {
     const uuid = crypto.randomUUID();
     let state = State.HANDSHAKING;
 
+    let keepAliveInterval: NodeJS.Timeout;
+
     s.on('end', () => {
         // console.log(`Client ${uuid} disconnected.`);
+        clearInterval(keepAliveInterval);
         console.log(`-------------------------------------------------------------`);
     });
 
@@ -78,6 +81,17 @@ server.on('connection', (s) => {
                         const username = d.subarray(offset, offset+usernameLength).toString(); offset+=usernameLength;
 
                         s.write(makePacket(LoginPackets.LoginSuccessPacket, [ LoginSuccessPacket(username, uuid) ], state));
+
+                        state = State.PLAY;
+
+                        // Wait an arbitrary(-ish) amount of time to wait for the client to do it's thing
+                        setTimeout(() => {
+                            // Send the JoinGamePacket here, then do chunk stuff later
+                        }, 500);
+
+                        keepAliveInterval = setInterval(() => {
+                            s.write(makePacket(PlayPackets.KeepAlivePacket, [ [ 0, 0, 0, 0, 32, 32, 32, 32, 0, 0, 0, 0, 32, 32, 32, 32 ] ], state));
+                        }, 5000);
                     break; }
                 }
             break;

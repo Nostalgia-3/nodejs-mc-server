@@ -34,8 +34,10 @@ const server = new net.Server();
 server.on('connection', (s) => {
     const uuid = crypto.randomUUID();
     let state = commons_1.State.HANDSHAKING;
+    let keepAliveInterval;
     s.on('end', () => {
         // console.log(`Client ${uuid} disconnected.`);
+        clearInterval(keepAliveInterval);
         console.log(`-------------------------------------------------------------`);
     });
     s.on('data', (d) => {
@@ -101,6 +103,14 @@ server.on('connection', (s) => {
                         const username = d.subarray(offset, offset + usernameLength).toString();
                         offset += usernameLength;
                         s.write((0, commons_1.makePacket)(commons_1.LoginPackets.LoginSuccessPacket, [(0, packet_1.LoginSuccessPacket)(username, uuid)], state));
+                        state = commons_1.State.PLAY;
+                        // Wait an arbitrary(-ish) amount of time to wait for the client to do it's thing
+                        setTimeout(() => {
+                            // Send the JoinGamePacket here, then do chunk stuff later
+                        }, 500);
+                        keepAliveInterval = setInterval(() => {
+                            s.write((0, commons_1.makePacket)(commons_1.PlayPackets.KeepAlivePacket, [[0, 0, 0, 0, 32, 32, 32, 32, 0, 0, 0, 0, 32, 32, 32, 32]], state));
+                        }, 5000);
                         break;
                     }
                 }
