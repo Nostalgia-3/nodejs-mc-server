@@ -90,7 +90,8 @@ server.on('connection', (s) => {
                         }, 500);
 
                         keepAliveInterval = setInterval(() => {
-                            s.write(makePacket(PlayPackets.KeepAlivePacket, [ [ 0, 0, 0, 0, 32, 32, 32, 32, 0, 0, 0, 0, 32, 32, 32, 32 ] ], state));
+                            s.write(makePacket(PlayPackets.KeepAlivePacket, [Buffer.from([0,0,16,16,0,16,0,16])], state));
+                            // s.write(makePacket(PlayPackets.KeepAlivePacket, [ [ 0, 0, 0, 0, 32, 32, 32, 32, 0, 0, 0, 0, 32, 32, 32, 32 ] ], state));
                         }, 5000);
                     break; }
                 }

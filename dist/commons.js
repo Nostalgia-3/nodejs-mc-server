@@ -59,6 +59,7 @@ var LoginPackets;
 })(LoginPackets = exports.LoginPackets || (exports.LoginPackets = {}));
 var PlayPackets;
 (function (PlayPackets) {
+    // Clientbound
     PlayPackets[PlayPackets["SpawnEntityPacket"] = 0] = "SpawnEntityPacket";
     PlayPackets[PlayPackets["SpawnExperienceOrbPacket"] = 1] = "SpawnExperienceOrbPacket";
     PlayPackets[PlayPackets["SpawnLivingEntityPacket"] = 2] = "SpawnLivingEntityPacket";
@@ -151,6 +152,55 @@ var PlayPackets;
     PlayPackets[PlayPackets["EntityEffectPacket"] = 89] = "EntityEffectPacket";
     PlayPackets[PlayPackets["DeclareRecipesPacket"] = 90] = "DeclareRecipesPacket";
     PlayPackets[PlayPackets["TagsPacket"] = 91] = "TagsPacket";
+    // Serverbound
+    PlayPackets[PlayPackets["TeleportConfirmPacket"] = 92] = "TeleportConfirmPacket";
+    PlayPackets[PlayPackets["QueryBlockNBTPacket"] = 93] = "QueryBlockNBTPacket";
+    PlayPackets[PlayPackets["SetDifficultyPacket"] = 94] = "SetDifficultyPacket";
+    PlayPackets[PlayPackets["SB_ChatMessagePacket"] = 95] = "SB_ChatMessagePacket";
+    PlayPackets[PlayPackets["ClientStatusPacket"] = 96] = "ClientStatusPacket";
+    PlayPackets[PlayPackets["ClientSettingsPacket"] = 97] = "ClientSettingsPacket";
+    PlayPackets[PlayPackets["SB_TabCompletePacket"] = 98] = "SB_TabCompletePacket";
+    PlayPackets[PlayPackets["SB_WindowConfirmationPacket"] = 99] = "SB_WindowConfirmationPacket";
+    PlayPackets[PlayPackets["ClickWindowButtonPacket"] = 100] = "ClickWindowButtonPacket";
+    PlayPackets[PlayPackets["ClickWindowPacket"] = 101] = "ClickWindowPacket";
+    PlayPackets[PlayPackets["SB_CloseWindowPacket"] = 102] = "SB_CloseWindowPacket";
+    PlayPackets[PlayPackets["SB_PluginMessagePacket"] = 103] = "SB_PluginMessagePacket";
+    PlayPackets[PlayPackets["EditBookPacket"] = 104] = "EditBookPacket";
+    PlayPackets[PlayPackets["QueryEntityNBTPacket"] = 105] = "QueryEntityNBTPacket";
+    PlayPackets[PlayPackets["InteractEntityPacket"] = 106] = "InteractEntityPacket";
+    PlayPackets[PlayPackets["GenerateStructurePacket"] = 107] = "GenerateStructurePacket";
+    PlayPackets[PlayPackets["SB_KeepAlivePacket"] = 108] = "SB_KeepAlivePacket";
+    PlayPackets[PlayPackets["LockDifficultyPacket"] = 109] = "LockDifficultyPacket";
+    PlayPackets[PlayPackets["PlayerPositionPacket"] = 110] = "PlayerPositionPacket";
+    PlayPackets[PlayPackets["PlayerPositionAndRotationPacket"] = 111] = "PlayerPositionAndRotationPacket";
+    PlayPackets[PlayPackets["PlayerRotationPacket"] = 112] = "PlayerRotationPacket";
+    PlayPackets[PlayPackets["PlayerMovementPacket"] = 113] = "PlayerMovementPacket";
+    PlayPackets[PlayPackets["SB_VehicleMovePacket"] = 114] = "SB_VehicleMovePacket";
+    PlayPackets[PlayPackets["SteerBoatPacket"] = 115] = "SteerBoatPacket";
+    PlayPackets[PlayPackets["PickItemPacket"] = 116] = "PickItemPacket";
+    PlayPackets[PlayPackets["CraftRecipeRequestPacket"] = 117] = "CraftRecipeRequestPacket";
+    PlayPackets[PlayPackets["SB_PlayerAbilitiesPacket"] = 118] = "SB_PlayerAbilitiesPacket";
+    PlayPackets[PlayPackets["PlayerDiggingPacket"] = 119] = "PlayerDiggingPacket";
+    PlayPackets[PlayPackets["EntityActionPacket"] = 120] = "EntityActionPacket";
+    PlayPackets[PlayPackets["SteerVehiclePacket"] = 121] = "SteerVehiclePacket";
+    PlayPackets[PlayPackets["SetRecipeBookStatePacket"] = 122] = "SetRecipeBookStatePacket";
+    PlayPackets[PlayPackets["SetDisplayedRecipePacket"] = 123] = "SetDisplayedRecipePacket";
+    PlayPackets[PlayPackets["NameItemPacket"] = 124] = "NameItemPacket";
+    PlayPackets[PlayPackets["ResourcePackStatusPacket"] = 125] = "ResourcePackStatusPacket";
+    PlayPackets[PlayPackets["AdvancementTabPacket"] = 126] = "AdvancementTabPacket";
+    PlayPackets[PlayPackets["SelectTradePacket"] = 127] = "SelectTradePacket";
+    PlayPackets[PlayPackets["SetBeaconEffectPacket"] = 128] = "SetBeaconEffectPacket";
+    PlayPackets[PlayPackets["SB_HeldItemChangePacket"] = 129] = "SB_HeldItemChangePacket";
+    PlayPackets[PlayPackets["UpdateCommandBlockPacket"] = 130] = "UpdateCommandBlockPacket";
+    PlayPackets[PlayPackets["UpdateCommandBlockMinecartPacket"] = 131] = "UpdateCommandBlockMinecartPacket";
+    PlayPackets[PlayPackets["CreativeInventoryActionPacket"] = 132] = "CreativeInventoryActionPacket";
+    PlayPackets[PlayPackets["UpdateJigsawBlockPacket"] = 133] = "UpdateJigsawBlockPacket";
+    PlayPackets[PlayPackets["UpdateStructureBlockPacket"] = 134] = "UpdateStructureBlockPacket";
+    PlayPackets[PlayPackets["UpdateSignPacket"] = 135] = "UpdateSignPacket";
+    PlayPackets[PlayPackets["AnimationPacket"] = 136] = "AnimationPacket";
+    PlayPackets[PlayPackets[" SpectatePacket"] = 137] = " SpectatePacket";
+    PlayPackets[PlayPackets["PlayerBlockPlacementPacket"] = 138] = "PlayerBlockPlacementPacket";
+    PlayPackets[PlayPackets["UseItemPacket"] = 139] = "UseItemPacket";
 })(PlayPackets = exports.PlayPackets || (exports.PlayPackets = {}));
 function makePacket(id, sections, status) {
     let b = [id];
@@ -205,7 +255,17 @@ const packetNames = [
             "NBTQueryResponsePacket", "CollectItemPacket", "EntityTeleportPacket", "AdvancementsPacket", "EntityPropertiesPacket", "EntityEffectPacket",
             "DeclareRecipesPacket", "TagsPacket"
         ],
-        serverbound: []
+        serverbound: [
+            "TeleportConfirmPacket", "QueryBlockNBTPacket", "SetDifficultyPacket", "ChatMessagePacket", "ClientStatusPacket", "ClientSettingsPacket",
+            "TabCompletePacket", "WindowConfirmationPacket", "ClickWindowButtonPacket", "ClickWindowPacket", "CloseWindowPacket", "PluginMessagePacket",
+            "EditBookPacket", "QueryEntityNBTPacket", "InteractEntityPacket", "GenerateStructurePacket", "KeepAlivePacket", "LockDifficultyPacket",
+            "PlayerPositionPacket", "PlayerPositionAndRotationPacket", "PlayerRotationPacket", "PlayerMovementPacket", "VehicleMovePacket", "SteerBoatPacket",
+            "PickItemPacket", "CraftRecipeRequestPacket", "PlayerAbilitiesPacket", "PlayerDiggingPacket", "EntityActionPacket", "SteerVehiclePacket",
+            "SetRecipeBookStatePacket", "SetDisplayedRecipePacket", "NameItemPacket", "ResourcePackStatusPacket", "AdvancementTabPacket", "SelectTradePacket",
+            "SetBeaconEffectPacket", "HeldItemChangePacket", "UpdateCommandBlockPacket", "UpdateCommandBlockMinecartPacket", "CreativeInventoryActionPacket",
+            "UpdateJigsawBlockPacket", "UpdateStructureBlockPacket", "UpdateSignPacket", "AnimationPacket", " SpectatePacket", "PlayerBlockPlacementPacket",
+            "UseItemPacket"
+        ]
     }
 ];
 function getStatusString(s) {
@@ -233,7 +293,7 @@ function logPacket(id, status, size, clientbound) {
             console.log(makePacketLogString(packetNames[status].clientbound[id], size, status, true));
     }
     else {
-        if (!packetNames[status].clientbound[id])
+        if (!packetNames[status].serverbound[id])
             console.log(makePacketLogString(`UnknownPacket(0x${id.toString(16).padStart(2, '0')})`, size, status, false));
         else
             console.log(makePacketLogString(packetNames[status].serverbound[id], size, status, false));

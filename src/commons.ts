@@ -77,6 +77,7 @@ export enum LoginPackets {
 }
 
 export enum PlayPackets {
+    // Clientbound
     SpawnEntityPacket, SpawnExperienceOrbPacket, SpawnLivingEntityPacket, SpawnPaintingPacket, SpawnPlayerPacket,
     EntityAnimationPacket, StatisticsPacket, AcknowledgePlayerDiggingPacket, BlockBreakAnimationPacket, BlockEntityDataPacket,
     BlockActionPacket, BlockChangePacket, BossBarPacket, ServerDifficultyPacket, ChatMessagePacket, TabCompletePacket,
@@ -92,7 +93,18 @@ export enum PlayPackets {
     EntityEquipmentPacket, SetExperiencePacket, UpdateHealth, ScoreboardObjectivePacket, SetPassengersPacket, TeamsPacket, UpdateScorePacket,
     TimeUpdatePacket, TitlePacket, EntitySoundEffectPacket, SoundEffectPacket, StopSoundPacket, PlayerListHeaderAndFooter,
     NBTQueryResponsePacket, CollectItemPacket, EntityTeleportPacket, AdvancementsPacket, EntityPropertiesPacket, EntityEffectPacket,
-    DeclareRecipesPacket, TagsPacket
+    DeclareRecipesPacket, TagsPacket,
+
+    // Serverbound
+    "TeleportConfirmPacket", "QueryBlockNBTPacket", "SetDifficultyPacket", "SB_ChatMessagePacket", "ClientStatusPacket", "ClientSettingsPacket",
+    "SB_TabCompletePacket", "SB_WindowConfirmationPacket", "ClickWindowButtonPacket", "ClickWindowPacket", "SB_CloseWindowPacket", "SB_PluginMessagePacket",
+    "EditBookPacket", "QueryEntityNBTPacket", "InteractEntityPacket", "GenerateStructurePacket", "SB_KeepAlivePacket", "LockDifficultyPacket",
+    "PlayerPositionPacket", "PlayerPositionAndRotationPacket", "PlayerRotationPacket", "PlayerMovementPacket", "SB_VehicleMovePacket", "SteerBoatPacket",
+    "PickItemPacket", "CraftRecipeRequestPacket", "SB_PlayerAbilitiesPacket", "PlayerDiggingPacket", "EntityActionPacket", "SteerVehiclePacket",
+    "SetRecipeBookStatePacket", "SetDisplayedRecipePacket", "NameItemPacket", "ResourcePackStatusPacket", "AdvancementTabPacket", "SelectTradePacket",
+    "SetBeaconEffectPacket", "SB_HeldItemChangePacket", "UpdateCommandBlockPacket", "UpdateCommandBlockMinecartPacket", "CreativeInventoryActionPacket",
+    "UpdateJigsawBlockPacket", "UpdateStructureBlockPacket", "UpdateSignPacket", "AnimationPacket", " SpectatePacket", "PlayerBlockPlacementPacket",
+    "UseItemPacket"
 }
 
 export function makePacket(id: number, sections: (Buffer|number[])[], status: State) {
@@ -159,7 +171,17 @@ const packetNames = [
             "NBTQueryResponsePacket", "CollectItemPacket", "EntityTeleportPacket", "AdvancementsPacket", "EntityPropertiesPacket", "EntityEffectPacket",
             "DeclareRecipesPacket", "TagsPacket"
         ],
-        serverbound: []
+        serverbound: [
+            "TeleportConfirmPacket", "QueryBlockNBTPacket", "SetDifficultyPacket", "ChatMessagePacket", "ClientStatusPacket", "ClientSettingsPacket",
+            "TabCompletePacket", "WindowConfirmationPacket", "ClickWindowButtonPacket", "ClickWindowPacket", "CloseWindowPacket", "PluginMessagePacket",
+            "EditBookPacket", "QueryEntityNBTPacket", "InteractEntityPacket", "GenerateStructurePacket", "KeepAlivePacket", "LockDifficultyPacket",
+            "PlayerPositionPacket", "PlayerPositionAndRotationPacket", "PlayerRotationPacket", "PlayerMovementPacket", "VehicleMovePacket", "SteerBoatPacket",
+            "PickItemPacket", "CraftRecipeRequestPacket", "PlayerAbilitiesPacket", "PlayerDiggingPacket", "EntityActionPacket", "SteerVehiclePacket",
+            "SetRecipeBookStatePacket", "SetDisplayedRecipePacket", "NameItemPacket", "ResourcePackStatusPacket", "AdvancementTabPacket", "SelectTradePacket",
+            "SetBeaconEffectPacket", "HeldItemChangePacket", "UpdateCommandBlockPacket", "UpdateCommandBlockMinecartPacket", "CreativeInventoryActionPacket",
+            "UpdateJigsawBlockPacket", "UpdateStructureBlockPacket", "UpdateSignPacket", "AnimationPacket", " SpectatePacket", "PlayerBlockPlacementPacket",
+            "UseItemPacket"
+        ]
     }
 ];
 
@@ -187,7 +209,7 @@ export function logPacket(id: number, status: State, size: number, clientbound: 
         if(!packetNames[status].clientbound[id]) console.log(makePacketLogString(`UnknownPacket`, size, status, true));
         else console.log(makePacketLogString(packetNames[status].clientbound[id], size, status, true));
     } else {
-        if(!packetNames[status].clientbound[id]) console.log(makePacketLogString(`UnknownPacket(0x${id.toString(16).padStart(2,'0')})`, size, status, false));
+        if(!packetNames[status].serverbound[id]) console.log(makePacketLogString(`UnknownPacket(0x${id.toString(16).padStart(2,'0')})`, size, status, false));
         else console.log(makePacketLogString(packetNames[status].serverbound[id], size, status, false));
     }
 }

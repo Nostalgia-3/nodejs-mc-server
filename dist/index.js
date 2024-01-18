@@ -109,7 +109,8 @@ server.on('connection', (s) => {
                             // Send the JoinGamePacket here, then do chunk stuff later
                         }, 500);
                         keepAliveInterval = setInterval(() => {
-                            s.write((0, commons_1.makePacket)(commons_1.PlayPackets.KeepAlivePacket, [[0, 0, 0, 0, 32, 32, 32, 32, 0, 0, 0, 0, 32, 32, 32, 32]], state));
+                            s.write((0, commons_1.makePacket)(commons_1.PlayPackets.KeepAlivePacket, [Buffer.from([0, 0, 16, 16, 0, 16, 0, 16])], state));
+                            // s.write(makePacket(PlayPackets.KeepAlivePacket, [ [ 0, 0, 0, 0, 32, 32, 32, 32, 0, 0, 0, 0, 32, 32, 32, 32 ] ], state));
                         }, 5000);
                         break;
                     }
