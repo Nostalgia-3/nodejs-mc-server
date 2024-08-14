@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.logPacket = exports.makeString = exports.makePacket = exports.PlayPackets = exports.LoginPackets = exports.StatusPackets = exports.HandshakePackets = exports.State = void 0;
+exports.logPacket = exports.makeString = exports.makeBoolean = exports.makeFloat = exports.makeDouble = exports.makeInt = exports.makePacket = exports.SB_PlayPackets = exports.PlayPackets = exports.LoginPackets = exports.StatusPackets = exports.HandshakePackets = exports.State = void 0;
 const varint = __importStar(require("varint"));
 var State;
 (function (State) {
@@ -31,11 +31,11 @@ var State;
     State[State["STATUS"] = 1] = "STATUS";
     State[State["LOGIN"] = 2] = "LOGIN";
     State[State["PLAY"] = 3] = "PLAY";
-})(State = exports.State || (exports.State = {}));
+})(State || (exports.State = State = {}));
 var HandshakePackets;
 (function (HandshakePackets) {
     /** Serverbound */ HandshakePackets[HandshakePackets["HandshakingPacket"] = 0] = "HandshakingPacket";
-})(HandshakePackets = exports.HandshakePackets || (exports.HandshakePackets = {}));
+})(HandshakePackets || (exports.HandshakePackets = HandshakePackets = {}));
 var StatusPackets;
 (function (StatusPackets) {
     // Serverbound
@@ -44,7 +44,7 @@ var StatusPackets;
     // Clientbound
     /** Clientbound */ StatusPackets[StatusPackets["ResponsePacket"] = 0] = "ResponsePacket";
     /** Clientbound */ StatusPackets[StatusPackets["PongPacket"] = 1] = "PongPacket";
-})(StatusPackets = exports.StatusPackets || (exports.StatusPackets = {}));
+})(StatusPackets || (exports.StatusPackets = StatusPackets = {}));
 var LoginPackets;
 (function (LoginPackets) {
     // Serverbound
@@ -56,152 +56,126 @@ var LoginPackets;
     /** Clientbound */ LoginPackets[LoginPackets["LoginSuccessPacket"] = 2] = "LoginSuccessPacket";
     /** Clientbound */ LoginPackets[LoginPackets["SetCompressionPacket"] = 3] = "SetCompressionPacket";
     /** Clientbound */ LoginPackets[LoginPackets["LoginPluginRequestPacket"] = 4] = "LoginPluginRequestPacket";
-})(LoginPackets = exports.LoginPackets || (exports.LoginPackets = {}));
+})(LoginPackets || (exports.LoginPackets = LoginPackets = {}));
 var PlayPackets;
 (function (PlayPackets) {
-    // Clientbound
-    PlayPackets[PlayPackets["SpawnEntityPacket"] = 0] = "SpawnEntityPacket";
+    PlayPackets[PlayPackets["SpawnObjectPacket"] = 0] = "SpawnObjectPacket";
     PlayPackets[PlayPackets["SpawnExperienceOrbPacket"] = 1] = "SpawnExperienceOrbPacket";
-    PlayPackets[PlayPackets["SpawnLivingEntityPacket"] = 2] = "SpawnLivingEntityPacket";
-    PlayPackets[PlayPackets["SpawnPaintingPacket"] = 3] = "SpawnPaintingPacket";
-    PlayPackets[PlayPackets["SpawnPlayerPacket"] = 4] = "SpawnPlayerPacket";
-    PlayPackets[PlayPackets["EntityAnimationPacket"] = 5] = "EntityAnimationPacket";
-    PlayPackets[PlayPackets["StatisticsPacket"] = 6] = "StatisticsPacket";
-    PlayPackets[PlayPackets["AcknowledgePlayerDiggingPacket"] = 7] = "AcknowledgePlayerDiggingPacket";
+    PlayPackets[PlayPackets["SpawnGlobalEntityPacket"] = 2] = "SpawnGlobalEntityPacket";
+    PlayPackets[PlayPackets["SpawnMobPacket"] = 3] = "SpawnMobPacket";
+    PlayPackets[PlayPackets["SpawnPaintingPacket"] = 4] = "SpawnPaintingPacket";
+    PlayPackets[PlayPackets["SpawnPlayerPacket"] = 5] = "SpawnPlayerPacket";
+    PlayPackets[PlayPackets["AnimationPacket"] = 6] = "AnimationPacket";
+    PlayPackets[PlayPackets["StatisticsPacket"] = 7] = "StatisticsPacket";
     PlayPackets[PlayPackets["BlockBreakAnimationPacket"] = 8] = "BlockBreakAnimationPacket";
-    PlayPackets[PlayPackets["BlockEntityDataPacket"] = 9] = "BlockEntityDataPacket";
+    PlayPackets[PlayPackets["UpdateBlockEntityPacket"] = 9] = "UpdateBlockEntityPacket";
     PlayPackets[PlayPackets["BlockActionPacket"] = 10] = "BlockActionPacket";
     PlayPackets[PlayPackets["BlockChangePacket"] = 11] = "BlockChangePacket";
     PlayPackets[PlayPackets["BossBarPacket"] = 12] = "BossBarPacket";
     PlayPackets[PlayPackets["ServerDifficultyPacket"] = 13] = "ServerDifficultyPacket";
-    PlayPackets[PlayPackets["ChatMessagePacket"] = 14] = "ChatMessagePacket";
-    PlayPackets[PlayPackets["TabCompletePacket"] = 15] = "TabCompletePacket";
-    PlayPackets[PlayPackets["DeclareCommandsPacket"] = 16] = "DeclareCommandsPacket";
-    PlayPackets[PlayPackets["WindowConfirmationPacket"] = 17] = "WindowConfirmationPacket";
+    PlayPackets[PlayPackets["TabCompletePacket"] = 14] = "TabCompletePacket";
+    PlayPackets[PlayPackets["ChatMessagePacket"] = 15] = "ChatMessagePacket";
+    PlayPackets[PlayPackets["MultiBlockChangePacket"] = 16] = "MultiBlockChangePacket";
+    PlayPackets[PlayPackets["ConfirmTransactionPacket"] = 17] = "ConfirmTransactionPacket";
     PlayPackets[PlayPackets["CloseWindowPacket"] = 18] = "CloseWindowPacket";
-    PlayPackets[PlayPackets["WindowItemsPacket"] = 19] = "WindowItemsPacket";
-    PlayPackets[PlayPackets["WindowPropertyPacket"] = 20] = "WindowPropertyPacket";
-    PlayPackets[PlayPackets["SetSlotPacket"] = 21] = "SetSlotPacket";
-    PlayPackets[PlayPackets["SetCooldownPacket"] = 22] = "SetCooldownPacket";
-    PlayPackets[PlayPackets["PluginMessagePacket"] = 23] = "PluginMessagePacket";
-    PlayPackets[PlayPackets["NamedSoundEffectPacket"] = 24] = "NamedSoundEffectPacket";
-    PlayPackets[PlayPackets["DisconnectPacket"] = 25] = "DisconnectPacket";
-    PlayPackets[PlayPackets["EntityStatusPacket"] = 26] = "EntityStatusPacket";
-    PlayPackets[PlayPackets["ExplosionPacket"] = 27] = "ExplosionPacket";
-    PlayPackets[PlayPackets["UnloadChunkPacket"] = 28] = "UnloadChunkPacket";
-    PlayPackets[PlayPackets["ChangeGameStatePacket"] = 29] = "ChangeGameStatePacket";
-    PlayPackets[PlayPackets["OpenHorseWindowPacket"] = 30] = "OpenHorseWindowPacket";
+    PlayPackets[PlayPackets["OpenWindowPacket"] = 19] = "OpenWindowPacket";
+    PlayPackets[PlayPackets["WindowItemsPacket"] = 20] = "WindowItemsPacket";
+    PlayPackets[PlayPackets["WindowPropertyPacket"] = 21] = "WindowPropertyPacket";
+    PlayPackets[PlayPackets["SetSlotPacket"] = 22] = "SetSlotPacket";
+    PlayPackets[PlayPackets["SetCooldownPacket"] = 23] = "SetCooldownPacket";
+    PlayPackets[PlayPackets["PluginMessagePacket"] = 24] = "PluginMessagePacket";
+    PlayPackets[PlayPackets["NamedSoundEffectPacket"] = 25] = "NamedSoundEffectPacket";
+    PlayPackets[PlayPackets["DisconnectPacket"] = 26] = "DisconnectPacket";
+    PlayPackets[PlayPackets["EntityStatusPacket"] = 27] = "EntityStatusPacket";
+    PlayPackets[PlayPackets["ExplosionPacket"] = 28] = "ExplosionPacket";
+    PlayPackets[PlayPackets["UnloadChunkPacket"] = 29] = "UnloadChunkPacket";
+    PlayPackets[PlayPackets["ChangeGameStatePacket"] = 30] = "ChangeGameStatePacket";
     PlayPackets[PlayPackets["KeepAlivePacket"] = 31] = "KeepAlivePacket";
     PlayPackets[PlayPackets["ChunkDataPacket"] = 32] = "ChunkDataPacket";
     PlayPackets[PlayPackets["EffectPacket"] = 33] = "EffectPacket";
     PlayPackets[PlayPackets["ParticlePacket"] = 34] = "ParticlePacket";
-    PlayPackets[PlayPackets["UpdateLightPacket"] = 35] = "UpdateLightPacket";
-    PlayPackets[PlayPackets["JoinGamePacket"] = 36] = "JoinGamePacket";
-    PlayPackets[PlayPackets["MapDataPacket"] = 37] = "MapDataPacket";
-    PlayPackets[PlayPackets["TradeListPacket"] = 38] = "TradeListPacket";
-    PlayPackets[PlayPackets["EntityPositionPacket"] = 39] = "EntityPositionPacket";
-    PlayPackets[PlayPackets["EntityPositionAndRotationPacket"] = 40] = "EntityPositionAndRotationPacket";
-    PlayPackets[PlayPackets["EntityRotationPacket"] = 41] = "EntityRotationPacket";
-    PlayPackets[PlayPackets["EntityMovementPacket"] = 42] = "EntityMovementPacket";
-    PlayPackets[PlayPackets["VehicleMovePacket"] = 43] = "VehicleMovePacket";
-    PlayPackets[PlayPackets["OpenBookPacket"] = 44] = "OpenBookPacket";
-    PlayPackets[PlayPackets["OpenWindowPacket"] = 45] = "OpenWindowPacket";
-    PlayPackets[PlayPackets["OpenSignEditorPacket"] = 46] = "OpenSignEditorPacket";
-    PlayPackets[PlayPackets["CraftRecipeResponsePacket"] = 47] = "CraftRecipeResponsePacket";
-    PlayPackets[PlayPackets["PlayerAbilitiesPacket"] = 48] = "PlayerAbilitiesPacket";
-    PlayPackets[PlayPackets["CombatEventPacket"] = 49] = "CombatEventPacket";
-    PlayPackets[PlayPackets["PlayerInfoPacket"] = 50] = "PlayerInfoPacket";
-    PlayPackets[PlayPackets["FacePlayerPacket"] = 51] = "FacePlayerPacket";
-    PlayPackets[PlayPackets["PlayerPositionAndLookPacket"] = 52] = "PlayerPositionAndLookPacket";
-    PlayPackets[PlayPackets["UnlockRecipesPacket"] = 53] = "UnlockRecipesPacket";
-    PlayPackets[PlayPackets["DestroyEntitiesPacket"] = 54] = "DestroyEntitiesPacket";
-    PlayPackets[PlayPackets["RemoveEntityEffectPacket"] = 55] = "RemoveEntityEffectPacket";
-    PlayPackets[PlayPackets["ResourcePackSendPacket"] = 56] = "ResourcePackSendPacket";
-    PlayPackets[PlayPackets["RespawnPacket"] = 57] = "RespawnPacket";
-    PlayPackets[PlayPackets["EntityHeadLookPacket"] = 58] = "EntityHeadLookPacket";
-    PlayPackets[PlayPackets["MultiBlockChangePacket"] = 59] = "MultiBlockChangePacket";
-    PlayPackets[PlayPackets["SelectAdvancementTabPacket"] = 60] = "SelectAdvancementTabPacket";
-    PlayPackets[PlayPackets["WorldBorderPacket"] = 61] = "WorldBorderPacket";
-    PlayPackets[PlayPackets["CameraPacket"] = 62] = "CameraPacket";
-    PlayPackets[PlayPackets["HeldItemChangePacket"] = 63] = "HeldItemChangePacket";
-    PlayPackets[PlayPackets["UpdateViewPositionPacket"] = 64] = "UpdateViewPositionPacket";
-    PlayPackets[PlayPackets["UpdateViewDistancePacket"] = 65] = "UpdateViewDistancePacket";
-    PlayPackets[PlayPackets["SpawnPositionPacket"] = 66] = "SpawnPositionPacket";
-    PlayPackets[PlayPackets["DisplayScoreboardPacket"] = 67] = "DisplayScoreboardPacket";
-    PlayPackets[PlayPackets["EntityMetadataPacket"] = 68] = "EntityMetadataPacket";
-    PlayPackets[PlayPackets["AttachEntityPacket"] = 69] = "AttachEntityPacket";
-    PlayPackets[PlayPackets["EntityVelocityPacket"] = 70] = "EntityVelocityPacket";
-    PlayPackets[PlayPackets["EntityEquipmentPacket"] = 71] = "EntityEquipmentPacket";
-    PlayPackets[PlayPackets["SetExperiencePacket"] = 72] = "SetExperiencePacket";
-    PlayPackets[PlayPackets["UpdateHealth"] = 73] = "UpdateHealth";
-    PlayPackets[PlayPackets["ScoreboardObjectivePacket"] = 74] = "ScoreboardObjectivePacket";
-    PlayPackets[PlayPackets["SetPassengersPacket"] = 75] = "SetPassengersPacket";
-    PlayPackets[PlayPackets["TeamsPacket"] = 76] = "TeamsPacket";
-    PlayPackets[PlayPackets["UpdateScorePacket"] = 77] = "UpdateScorePacket";
-    PlayPackets[PlayPackets["TimeUpdatePacket"] = 78] = "TimeUpdatePacket";
-    PlayPackets[PlayPackets["TitlePacket"] = 79] = "TitlePacket";
-    PlayPackets[PlayPackets["EntitySoundEffectPacket"] = 80] = "EntitySoundEffectPacket";
-    PlayPackets[PlayPackets["SoundEffectPacket"] = 81] = "SoundEffectPacket";
-    PlayPackets[PlayPackets["StopSoundPacket"] = 82] = "StopSoundPacket";
-    PlayPackets[PlayPackets["PlayerListHeaderAndFooter"] = 83] = "PlayerListHeaderAndFooter";
-    PlayPackets[PlayPackets["NBTQueryResponsePacket"] = 84] = "NBTQueryResponsePacket";
-    PlayPackets[PlayPackets["CollectItemPacket"] = 85] = "CollectItemPacket";
-    PlayPackets[PlayPackets["EntityTeleportPacket"] = 86] = "EntityTeleportPacket";
-    PlayPackets[PlayPackets["AdvancementsPacket"] = 87] = "AdvancementsPacket";
-    PlayPackets[PlayPackets["EntityPropertiesPacket"] = 88] = "EntityPropertiesPacket";
-    PlayPackets[PlayPackets["EntityEffectPacket"] = 89] = "EntityEffectPacket";
-    PlayPackets[PlayPackets["DeclareRecipesPacket"] = 90] = "DeclareRecipesPacket";
-    PlayPackets[PlayPackets["TagsPacket"] = 91] = "TagsPacket";
-    // Serverbound
-    PlayPackets[PlayPackets["TeleportConfirmPacket"] = 92] = "TeleportConfirmPacket";
-    PlayPackets[PlayPackets["QueryBlockNBTPacket"] = 93] = "QueryBlockNBTPacket";
-    PlayPackets[PlayPackets["SetDifficultyPacket"] = 94] = "SetDifficultyPacket";
-    PlayPackets[PlayPackets["SB_ChatMessagePacket"] = 95] = "SB_ChatMessagePacket";
-    PlayPackets[PlayPackets["ClientStatusPacket"] = 96] = "ClientStatusPacket";
-    PlayPackets[PlayPackets["ClientSettingsPacket"] = 97] = "ClientSettingsPacket";
-    PlayPackets[PlayPackets["SB_TabCompletePacket"] = 98] = "SB_TabCompletePacket";
-    PlayPackets[PlayPackets["SB_WindowConfirmationPacket"] = 99] = "SB_WindowConfirmationPacket";
-    PlayPackets[PlayPackets["ClickWindowButtonPacket"] = 100] = "ClickWindowButtonPacket";
-    PlayPackets[PlayPackets["ClickWindowPacket"] = 101] = "ClickWindowPacket";
-    PlayPackets[PlayPackets["SB_CloseWindowPacket"] = 102] = "SB_CloseWindowPacket";
-    PlayPackets[PlayPackets["SB_PluginMessagePacket"] = 103] = "SB_PluginMessagePacket";
-    PlayPackets[PlayPackets["EditBookPacket"] = 104] = "EditBookPacket";
-    PlayPackets[PlayPackets["QueryEntityNBTPacket"] = 105] = "QueryEntityNBTPacket";
-    PlayPackets[PlayPackets["InteractEntityPacket"] = 106] = "InteractEntityPacket";
-    PlayPackets[PlayPackets["GenerateStructurePacket"] = 107] = "GenerateStructurePacket";
-    PlayPackets[PlayPackets["SB_KeepAlivePacket"] = 108] = "SB_KeepAlivePacket";
-    PlayPackets[PlayPackets["LockDifficultyPacket"] = 109] = "LockDifficultyPacket";
-    PlayPackets[PlayPackets["PlayerPositionPacket"] = 110] = "PlayerPositionPacket";
-    PlayPackets[PlayPackets["PlayerPositionAndRotationPacket"] = 111] = "PlayerPositionAndRotationPacket";
-    PlayPackets[PlayPackets["PlayerRotationPacket"] = 112] = "PlayerRotationPacket";
-    PlayPackets[PlayPackets["PlayerMovementPacket"] = 113] = "PlayerMovementPacket";
-    PlayPackets[PlayPackets["SB_VehicleMovePacket"] = 114] = "SB_VehicleMovePacket";
-    PlayPackets[PlayPackets["SteerBoatPacket"] = 115] = "SteerBoatPacket";
-    PlayPackets[PlayPackets["PickItemPacket"] = 116] = "PickItemPacket";
-    PlayPackets[PlayPackets["CraftRecipeRequestPacket"] = 117] = "CraftRecipeRequestPacket";
-    PlayPackets[PlayPackets["SB_PlayerAbilitiesPacket"] = 118] = "SB_PlayerAbilitiesPacket";
-    PlayPackets[PlayPackets["PlayerDiggingPacket"] = 119] = "PlayerDiggingPacket";
-    PlayPackets[PlayPackets["EntityActionPacket"] = 120] = "EntityActionPacket";
-    PlayPackets[PlayPackets["SteerVehiclePacket"] = 121] = "SteerVehiclePacket";
-    PlayPackets[PlayPackets["SetRecipeBookStatePacket"] = 122] = "SetRecipeBookStatePacket";
-    PlayPackets[PlayPackets["SetDisplayedRecipePacket"] = 123] = "SetDisplayedRecipePacket";
-    PlayPackets[PlayPackets["NameItemPacket"] = 124] = "NameItemPacket";
-    PlayPackets[PlayPackets["ResourcePackStatusPacket"] = 125] = "ResourcePackStatusPacket";
-    PlayPackets[PlayPackets["AdvancementTabPacket"] = 126] = "AdvancementTabPacket";
-    PlayPackets[PlayPackets["SelectTradePacket"] = 127] = "SelectTradePacket";
-    PlayPackets[PlayPackets["SetBeaconEffectPacket"] = 128] = "SetBeaconEffectPacket";
-    PlayPackets[PlayPackets["SB_HeldItemChangePacket"] = 129] = "SB_HeldItemChangePacket";
-    PlayPackets[PlayPackets["UpdateCommandBlockPacket"] = 130] = "UpdateCommandBlockPacket";
-    PlayPackets[PlayPackets["UpdateCommandBlockMinecartPacket"] = 131] = "UpdateCommandBlockMinecartPacket";
-    PlayPackets[PlayPackets["CreativeInventoryActionPacket"] = 132] = "CreativeInventoryActionPacket";
-    PlayPackets[PlayPackets["UpdateJigsawBlockPacket"] = 133] = "UpdateJigsawBlockPacket";
-    PlayPackets[PlayPackets["UpdateStructureBlockPacket"] = 134] = "UpdateStructureBlockPacket";
-    PlayPackets[PlayPackets["UpdateSignPacket"] = 135] = "UpdateSignPacket";
-    PlayPackets[PlayPackets["AnimationPacket"] = 136] = "AnimationPacket";
-    PlayPackets[PlayPackets[" SpectatePacket"] = 137] = " SpectatePacket";
-    PlayPackets[PlayPackets["PlayerBlockPlacementPacket"] = 138] = "PlayerBlockPlacementPacket";
-    PlayPackets[PlayPackets["UseItemPacket"] = 139] = "UseItemPacket";
-})(PlayPackets = exports.PlayPackets || (exports.PlayPackets = {}));
+    PlayPackets[PlayPackets["JoinGamePacket"] = 35] = "JoinGamePacket";
+    PlayPackets[PlayPackets["MapPacket"] = 36] = "MapPacket";
+    PlayPackets[PlayPackets["EntityPacket"] = 37] = "EntityPacket";
+    PlayPackets[PlayPackets["EntityRelativeMovePacket"] = 38] = "EntityRelativeMovePacket";
+    PlayPackets[PlayPackets["EntityLookAndRelativeMovePacket"] = 39] = "EntityLookAndRelativeMovePacket";
+    PlayPackets[PlayPackets["EntityLookPacket"] = 40] = "EntityLookPacket";
+    PlayPackets[PlayPackets["VehicleMovePacket"] = 41] = "VehicleMovePacket";
+    PlayPackets[PlayPackets["OpenSignEditorPacket"] = 42] = "OpenSignEditorPacket";
+    PlayPackets[PlayPackets["CraftRecipeResponsePacket"] = 43] = "CraftRecipeResponsePacket";
+    PlayPackets[PlayPackets["PlayerAbilitiesPacket"] = 44] = "PlayerAbilitiesPacket";
+    PlayPackets[PlayPackets["CombatEventPacket"] = 45] = "CombatEventPacket";
+    PlayPackets[PlayPackets["PlayerListItemPacket"] = 46] = "PlayerListItemPacket";
+    PlayPackets[PlayPackets["PlayerPositionAndLookPacket"] = 47] = "PlayerPositionAndLookPacket";
+    PlayPackets[PlayPackets["UseBedPacket"] = 48] = "UseBedPacket";
+    PlayPackets[PlayPackets["UnlockRecipesPacket"] = 49] = "UnlockRecipesPacket";
+    PlayPackets[PlayPackets["DestroyEntitiesPacket"] = 50] = "DestroyEntitiesPacket";
+    PlayPackets[PlayPackets["RemoveEntityEffectPacket"] = 51] = "RemoveEntityEffectPacket";
+    PlayPackets[PlayPackets["ResourcePackSendPacket"] = 52] = "ResourcePackSendPacket";
+    PlayPackets[PlayPackets["RespawnPacket"] = 53] = "RespawnPacket";
+    PlayPackets[PlayPackets["EntityHeadLookPacket"] = 54] = "EntityHeadLookPacket";
+    PlayPackets[PlayPackets["SelectAdvancementTabPacket"] = 55] = "SelectAdvancementTabPacket";
+    PlayPackets[PlayPackets["WorldBorderPacket"] = 56] = "WorldBorderPacket";
+    PlayPackets[PlayPackets["CameraPacket"] = 57] = "CameraPacket";
+    PlayPackets[PlayPackets["HeldItemChangePacket"] = 58] = "HeldItemChangePacket";
+    PlayPackets[PlayPackets["DisplayScoreboardPacket"] = 59] = "DisplayScoreboardPacket";
+    PlayPackets[PlayPackets["EntityMetadataPacket"] = 60] = "EntityMetadataPacket";
+    PlayPackets[PlayPackets["AttachEntityPacket"] = 61] = "AttachEntityPacket";
+    PlayPackets[PlayPackets["EntityVelocityPacket"] = 62] = "EntityVelocityPacket";
+    PlayPackets[PlayPackets["EntityEquipmentPacket"] = 63] = "EntityEquipmentPacket";
+    PlayPackets[PlayPackets["SetExperiencePacket"] = 64] = "SetExperiencePacket";
+    PlayPackets[PlayPackets["UpdateHealthPacket"] = 65] = "UpdateHealthPacket";
+    PlayPackets[PlayPackets["ScoreboardObjectivePacket"] = 66] = "ScoreboardObjectivePacket";
+    PlayPackets[PlayPackets["SetPassengersPacket"] = 67] = "SetPassengersPacket";
+    PlayPackets[PlayPackets["TeamsPacket"] = 68] = "TeamsPacket";
+    PlayPackets[PlayPackets["UpdateScorePacket"] = 69] = "UpdateScorePacket";
+    PlayPackets[PlayPackets["SpawnPositionPacket"] = 70] = "SpawnPositionPacket";
+    PlayPackets[PlayPackets["TimeUpdatePacket"] = 71] = "TimeUpdatePacket";
+    PlayPackets[PlayPackets["TitlePacket"] = 72] = "TitlePacket";
+    PlayPackets[PlayPackets["SoundEffectPacket"] = 73] = "SoundEffectPacket";
+    PlayPackets[PlayPackets["PlayerListHeaderAndFooterPacket"] = 74] = "PlayerListHeaderAndFooterPacket";
+    PlayPackets[PlayPackets["CollectItemPacket"] = 75] = "CollectItemPacket";
+    PlayPackets[PlayPackets["EntityTeleportPacket"] = 76] = "EntityTeleportPacket";
+    PlayPackets[PlayPackets["AdvancementsPacket"] = 77] = "AdvancementsPacket";
+    PlayPackets[PlayPackets["EntityPropertiesPacket"] = 78] = "EntityPropertiesPacket";
+    PlayPackets[PlayPackets["EntityEffectPacket"] = 79] = "EntityEffectPacket";
+})(PlayPackets || (exports.PlayPackets = PlayPackets = {}));
+var SB_PlayPackets;
+(function (SB_PlayPackets) {
+    SB_PlayPackets[SB_PlayPackets["TeleportConfirmPacket"] = 0] = "TeleportConfirmPacket";
+    SB_PlayPackets[SB_PlayPackets["TabCompletePacket"] = 1] = "TabCompletePacket";
+    SB_PlayPackets[SB_PlayPackets["ChatMessagePacket"] = 2] = "ChatMessagePacket";
+    SB_PlayPackets[SB_PlayPackets["ClientStatusPacket"] = 3] = "ClientStatusPacket";
+    SB_PlayPackets[SB_PlayPackets["ClientSettingsPacket"] = 4] = "ClientSettingsPacket";
+    SB_PlayPackets[SB_PlayPackets["ConfirmTransactionPacket"] = 5] = "ConfirmTransactionPacket";
+    SB_PlayPackets[SB_PlayPackets["EnchantItemPacket"] = 6] = "EnchantItemPacket";
+    SB_PlayPackets[SB_PlayPackets["ClickWindowPacket"] = 7] = "ClickWindowPacket";
+    SB_PlayPackets[SB_PlayPackets["CloseWindowPacket"] = 8] = "CloseWindowPacket";
+    SB_PlayPackets[SB_PlayPackets["PluginMessagePacket"] = 9] = "PluginMessagePacket";
+    SB_PlayPackets[SB_PlayPackets["UseEntityPacket"] = 10] = "UseEntityPacket";
+    SB_PlayPackets[SB_PlayPackets["KeepAlivePacket"] = 11] = "KeepAlivePacket";
+    SB_PlayPackets[SB_PlayPackets["PlayerPacket"] = 12] = "PlayerPacket";
+    SB_PlayPackets[SB_PlayPackets["PlayerPositionPacket"] = 13] = "PlayerPositionPacket";
+    SB_PlayPackets[SB_PlayPackets["PlayerPositionAndLookPacket"] = 14] = "PlayerPositionAndLookPacket";
+    SB_PlayPackets[SB_PlayPackets["PlayerLookPacket"] = 15] = "PlayerLookPacket";
+    SB_PlayPackets[SB_PlayPackets["VehicleMovePacket"] = 16] = "VehicleMovePacket";
+    SB_PlayPackets[SB_PlayPackets["SteerBoartPacket"] = 17] = "SteerBoartPacket";
+    SB_PlayPackets[SB_PlayPackets["CraftRecipeRequestPacket"] = 18] = "CraftRecipeRequestPacket";
+    SB_PlayPackets[SB_PlayPackets["PlayerAbilitiesPacket"] = 19] = "PlayerAbilitiesPacket";
+    SB_PlayPackets[SB_PlayPackets["PlayerDiggingPacket"] = 20] = "PlayerDiggingPacket";
+    SB_PlayPackets[SB_PlayPackets["EntityActionPacket"] = 21] = "EntityActionPacket";
+    SB_PlayPackets[SB_PlayPackets["SteerVehiclePacket"] = 22] = "SteerVehiclePacket";
+    SB_PlayPackets[SB_PlayPackets["CraftingBookDataPacket"] = 23] = "CraftingBookDataPacket";
+    SB_PlayPackets[SB_PlayPackets["ResourcePackStatusPacket"] = 24] = "ResourcePackStatusPacket";
+    SB_PlayPackets[SB_PlayPackets["AdvancementTabPacket"] = 25] = "AdvancementTabPacket";
+    SB_PlayPackets[SB_PlayPackets["HeldItemChangePacket"] = 26] = "HeldItemChangePacket";
+    SB_PlayPackets[SB_PlayPackets["CreativeInventoryActionPacket"] = 27] = "CreativeInventoryActionPacket";
+    SB_PlayPackets[SB_PlayPackets["UpdateSignPacket"] = 28] = "UpdateSignPacket";
+    SB_PlayPackets[SB_PlayPackets["AnimationPacket"] = 29] = "AnimationPacket";
+    SB_PlayPackets[SB_PlayPackets["SpectatePacket"] = 30] = "SpectatePacket";
+    SB_PlayPackets[SB_PlayPackets["PlayerBlockPlacementPacket"] = 31] = "PlayerBlockPlacementPacket";
+    SB_PlayPackets[SB_PlayPackets["UseItemPacket"] = 32] = "UseItemPacket";
+})(SB_PlayPackets || (exports.SB_PlayPackets = SB_PlayPackets = {}));
 function makePacket(id, sections, status) {
     let b = [id];
     for (let i = 0; i < sections.length; i++) {
@@ -214,6 +188,28 @@ function makePacket(id, sections, status) {
     return Buffer.from(sec);
 }
 exports.makePacket = makePacket;
+function makeInt(n) {
+    const b = Buffer.alloc(4);
+    b.writeInt32BE(n);
+    return Array.from(b);
+}
+exports.makeInt = makeInt;
+function makeDouble(n) {
+    const b = Buffer.alloc(8);
+    b.writeDoubleBE(n);
+    return Array.from(b);
+}
+exports.makeDouble = makeDouble;
+function makeFloat(n) {
+    const b = Buffer.alloc(4);
+    b.writeFloatBE(n);
+    return Array.from(b);
+}
+exports.makeFloat = makeFloat;
+function makeBoolean(b) {
+    return [(b ? 1 : 0)];
+}
+exports.makeBoolean = makeBoolean;
 function makeString(s) {
     // length (varint)
     // data   (UTF8 character array)
@@ -238,33 +234,28 @@ const packetNames = [
     },
     {
         clientbound: [
-            "SpawnEntityPacket", "SpawnExperienceOrbPacket", "SpawnLivingEntityPacket", "SpawnPaintingPacket", "SpawnPlayerPacket",
-            "EntityAnimationPacket", "StatisticsPacket", "AcknowledgePlayerDiggingPacket", "BlockBreakAnimationPacket", "BlockEntityDataPacket",
-            "BlockActionPacket", "BlockChangePacket", "BossBarPacket", "ServerDifficultyPacket", "ChatMessagePacket", "TabCompletePacket",
-            "DeclareCommandsPacket", "WindowConfirmationPacket", "CloseWindowPacket", "WindowItemsPacket", "WindowPropertyPacket", "SetSlotPacket",
-            "SetCooldownPacket", "PluginMessagePacket", "NamedSoundEffectPacket", "DisconnectPacket", "EntityStatusPacket", "ExplosionPacket",
-            "UnloadChunkPacket", "ChangeGameStatePacket", "OpenHorseWindowPacket", "KeepAlivePacket", "ChunkDataPacket", "EffectPacket", "ParticlePacket",
-            "UpdateLightPacket", "JoinGamePacket", "MapDataPacket", "TradeListPacket", "EntityPositionPacket", "EntityPositionAndRotationPacket",
-            "EntityRotationPacket", "EntityMovementPacket", "VehicleMovePacket", "OpenBookPacket", "OpenWindowPacket", "OpenSignEditorPacket",
-            "CraftRecipeResponsePacket", "PlayerAbilitiesPacket", "CombatEventPacket", "PlayerInfoPacket", "FacePlayerPacket", "PlayerPositionAndLookPacket",
-            "UnlockRecipesPacket", "DestroyEntitiesPacket", "RemoveEntityEffectPacket", "ResourcePackSendPacket", "RespawnPacket", "EntityHeadLookPacket",
-            "MultiBlockChangePacket", "SelectAdvancementTabPacket", "WorldBorderPacket", "CameraPacket", "HeldItemChangePacket", "UpdateViewPositionPacket",
-            "UpdateViewDistancePacket", "SpawnPositionPacket", "DisplayScoreboardPacket", "EntityMetadataPacket", "AttachEntityPacket", "EntityVelocityPacket",
-            "EntityEquipmentPacket", "SetExperiencePacket", "UpdateHealth", "ScoreboardObjectivePacket", "SetPassengersPacket", "TeamsPacket", "UpdateScorePacket",
-            "TimeUpdatePacket", "TitlePacket", "EntitySoundEffectPacket", "SoundEffectPacket", "StopSoundPacket", "PlayerListHeaderAndFooter",
-            "NBTQueryResponsePacket", "CollectItemPacket", "EntityTeleportPacket", "AdvancementsPacket", "EntityPropertiesPacket", "EntityEffectPacket",
-            "DeclareRecipesPacket", "TagsPacket"
+            "SpawnObjectPacket", "SpawnExperienceOrbPacket", "SpawnGlobalEntityPacket", "SpawnMobPacket",
+            "SpawnPaintingPacket", "SpawnPlayerPacket", "AnimationPacket", "StatisticsPacket", "BlockBreakAnimationPacket",
+            "UpdateBlockEntityPacket", "BlockActionPacket", "BlockChangePacket", "BossBarPacket", "ServerDifficultyPacket",
+            "TabCompletePacket", "ChatMessagePacket", "MultiBlockChangePacket", "ConfirmTransactionPacket", "CloseWindowPacket",
+            "OpenWindowPacket", "WindowItemsPacket", "WindowPropertyPacket", "SetSlotPacket", "SetCooldownPacket", "PluginMessagePacket",
+            "NamedSoundEffectPacket", "DisconnectPacket", "EntityStatusPacket", "ExplosionPacket", "UnloadChunkPacket", "ChangeGameStatePacket",
+            "KeepAlivePacket", "ChunkDataPacket", "EffectPacket", "ParticlePacket", "JoinGamePacket", "MapPacket", "EntityPacket", "EntityRelativeMovePacket",
+            "EntityLookAndRelativeMovePacket", "EntityLookPacket", "VehicleMovePacket", "OpenSignEditorPacket", "CraftRecipeResponsePacket",
+            "PlayerAbilitiesPacket", "CombatEventPacket", "PlayerListItemPacket", "PlayerPositionAndLookPacket", "UseBedPacket", "UnlockRecipesPacket",
+            "DestroyEntitiesPacket", "RemoveEntityEffectPacket", "ResourcePackSendPacket", "RespawnPacket", "EntityHeadLookPacket", "SelectAdvancementTabPacket",
+            "WorldBorderPacket", "CameraPacket", "HeldItemChangePacket", "DisplayScoreboardPacket", "EntityMetadataPacket", "AttachEntityPacket", "EntityVelocityPacket",
+            "EntityEquipmentPacket", "SetExperiencePacket", "UpdateHealthPacket", "ScoreboardObjectivePacket", "SetPassengersPacket", "TeamsPacket", "UpdateScorePacket",
+            "SpawnPositionPacket", "TimeUpdatePacket", "TitlePacket", "SoundEffectPacket", "PlayerListHeaderAndFooterPacket", "CollectItemPacket", "EntityTeleportPacket",
+            "AdvancementsPacket", "EntityPropertiesPacket", "EntityEffectPacket"
         ],
         serverbound: [
-            "TeleportConfirmPacket", "QueryBlockNBTPacket", "SetDifficultyPacket", "ChatMessagePacket", "ClientStatusPacket", "ClientSettingsPacket",
-            "TabCompletePacket", "WindowConfirmationPacket", "ClickWindowButtonPacket", "ClickWindowPacket", "CloseWindowPacket", "PluginMessagePacket",
-            "EditBookPacket", "QueryEntityNBTPacket", "InteractEntityPacket", "GenerateStructurePacket", "KeepAlivePacket", "LockDifficultyPacket",
-            "PlayerPositionPacket", "PlayerPositionAndRotationPacket", "PlayerRotationPacket", "PlayerMovementPacket", "VehicleMovePacket", "SteerBoatPacket",
-            "PickItemPacket", "CraftRecipeRequestPacket", "PlayerAbilitiesPacket", "PlayerDiggingPacket", "EntityActionPacket", "SteerVehiclePacket",
-            "SetRecipeBookStatePacket", "SetDisplayedRecipePacket", "NameItemPacket", "ResourcePackStatusPacket", "AdvancementTabPacket", "SelectTradePacket",
-            "SetBeaconEffectPacket", "HeldItemChangePacket", "UpdateCommandBlockPacket", "UpdateCommandBlockMinecartPacket", "CreativeInventoryActionPacket",
-            "UpdateJigsawBlockPacket", "UpdateStructureBlockPacket", "UpdateSignPacket", "AnimationPacket", " SpectatePacket", "PlayerBlockPlacementPacket",
-            "UseItemPacket"
+            "TeleportConfirmPacket", "TabCompletePacket", "ChatMessagePacket", "ClientStatusPacket", "ClientSettingsPacket", "ConfirmTransactionPacket",
+            "EnchantItemPacket", "ClickWindowPacket", "CloseWindowPacket", "PluginMessagePacket", "UseEntityPacket", "KeepAlivePacket", "PlayerPacket",
+            "PlayerPositionPacket", "PlayerPositionAndLookPacket", "PlayerLookPacket", "VehicleMovePacket", "SteerBoartPacket", "CraftRecipeRequestPacket",
+            "PlayerAbilitiesPacket", "PlayerDiggingPacket", "EntityActionPacket", "SteerVehiclePacket", "CraftingBookDataPacket", "ResourcePackStatusPacket",
+            "AdvancementTabPacket", "HeldItemChangePacket", "CreativeInventoryActionPacket", "UpdateSignPacket", "AnimationPacket", "SpectatePacket",
+            "PlayerBlockPlacementPacket", "UseItemPacket"
         ]
     }
 ];

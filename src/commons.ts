@@ -25,6 +25,24 @@ import * as varint from 'varint';
 //     'change_page' |
 //     'copy_to_clipboard';
 
+export type ServerPlayer = {
+    username: string,
+    uuid: string,
+    eid: number,
+    pos: number[],
+    rotation: number[]
+};
+
+export type ServerEntity = {
+    eid: number,
+    pos: number[],
+    rotation: number[]
+};
+
+export type ServerStorage = {
+    players: ServerPlayer[],
+    entities: ServerEntity[]
+};
 
 export type StatusJSON = {
     verion: {
@@ -77,34 +95,29 @@ export enum LoginPackets {
 }
 
 export enum PlayPackets {
-    // Clientbound
-    SpawnEntityPacket, SpawnExperienceOrbPacket, SpawnLivingEntityPacket, SpawnPaintingPacket, SpawnPlayerPacket,
-    EntityAnimationPacket, StatisticsPacket, AcknowledgePlayerDiggingPacket, BlockBreakAnimationPacket, BlockEntityDataPacket,
-    BlockActionPacket, BlockChangePacket, BossBarPacket, ServerDifficultyPacket, ChatMessagePacket, TabCompletePacket,
-    DeclareCommandsPacket, WindowConfirmationPacket, CloseWindowPacket, WindowItemsPacket, WindowPropertyPacket, SetSlotPacket,
-    SetCooldownPacket, PluginMessagePacket, NamedSoundEffectPacket, DisconnectPacket, EntityStatusPacket, ExplosionPacket,
-    UnloadChunkPacket, ChangeGameStatePacket, OpenHorseWindowPacket, KeepAlivePacket, ChunkDataPacket, EffectPacket, ParticlePacket,
-    UpdateLightPacket, JoinGamePacket, MapDataPacket, TradeListPacket, EntityPositionPacket, EntityPositionAndRotationPacket,
-    EntityRotationPacket, EntityMovementPacket, VehicleMovePacket, OpenBookPacket, OpenWindowPacket, OpenSignEditorPacket,
-    CraftRecipeResponsePacket, PlayerAbilitiesPacket, CombatEventPacket, PlayerInfoPacket, FacePlayerPacket, PlayerPositionAndLookPacket,
-    UnlockRecipesPacket, DestroyEntitiesPacket, RemoveEntityEffectPacket, ResourcePackSendPacket, RespawnPacket, EntityHeadLookPacket,
-    MultiBlockChangePacket, SelectAdvancementTabPacket, WorldBorderPacket, CameraPacket, HeldItemChangePacket, UpdateViewPositionPacket,
-    UpdateViewDistancePacket, SpawnPositionPacket, DisplayScoreboardPacket, EntityMetadataPacket, AttachEntityPacket, EntityVelocityPacket,
-    EntityEquipmentPacket, SetExperiencePacket, UpdateHealth, ScoreboardObjectivePacket, SetPassengersPacket, TeamsPacket, UpdateScorePacket,
-    TimeUpdatePacket, TitlePacket, EntitySoundEffectPacket, SoundEffectPacket, StopSoundPacket, PlayerListHeaderAndFooter,
-    NBTQueryResponsePacket, CollectItemPacket, EntityTeleportPacket, AdvancementsPacket, EntityPropertiesPacket, EntityEffectPacket,
-    DeclareRecipesPacket, TagsPacket,
+    SpawnObjectPacket, SpawnExperienceOrbPacket, SpawnGlobalEntityPacket,  SpawnMobPacket,
+    SpawnPaintingPacket, SpawnPlayerPacket, AnimationPacket, StatisticsPacket, BlockBreakAnimationPacket,
+    UpdateBlockEntityPacket, BlockActionPacket, BlockChangePacket, BossBarPacket, ServerDifficultyPacket,
+    TabCompletePacket, ChatMessagePacket, MultiBlockChangePacket, ConfirmTransactionPacket, CloseWindowPacket,
+    OpenWindowPacket, WindowItemsPacket, WindowPropertyPacket, SetSlotPacket, SetCooldownPacket, PluginMessagePacket,
+    NamedSoundEffectPacket, DisconnectPacket, EntityStatusPacket, ExplosionPacket, UnloadChunkPacket, ChangeGameStatePacket,
+    KeepAlivePacket, ChunkDataPacket, EffectPacket, ParticlePacket, JoinGamePacket, MapPacket, EntityPacket, EntityRelativeMovePacket,
+    EntityLookAndRelativeMovePacket, EntityLookPacket, VehicleMovePacket, OpenSignEditorPacket, CraftRecipeResponsePacket,
+    PlayerAbilitiesPacket, CombatEventPacket, PlayerListItemPacket, PlayerPositionAndLookPacket, UseBedPacket, UnlockRecipesPacket,
+    DestroyEntitiesPacket, RemoveEntityEffectPacket, ResourcePackSendPacket, RespawnPacket, EntityHeadLookPacket, SelectAdvancementTabPacket,
+    WorldBorderPacket, CameraPacket, HeldItemChangePacket, DisplayScoreboardPacket, EntityMetadataPacket, AttachEntityPacket, EntityVelocityPacket,
+    EntityEquipmentPacket, SetExperiencePacket, UpdateHealthPacket, ScoreboardObjectivePacket, SetPassengersPacket, TeamsPacket, UpdateScorePacket,
+    SpawnPositionPacket, TimeUpdatePacket, TitlePacket, SoundEffectPacket, PlayerListHeaderAndFooterPacket, CollectItemPacket, EntityTeleportPacket,
+    AdvancementsPacket, EntityPropertiesPacket, EntityEffectPacket
+}
 
-    // Serverbound
-    "TeleportConfirmPacket", "QueryBlockNBTPacket", "SetDifficultyPacket", "SB_ChatMessagePacket", "ClientStatusPacket", "ClientSettingsPacket",
-    "SB_TabCompletePacket", "SB_WindowConfirmationPacket", "ClickWindowButtonPacket", "ClickWindowPacket", "SB_CloseWindowPacket", "SB_PluginMessagePacket",
-    "EditBookPacket", "QueryEntityNBTPacket", "InteractEntityPacket", "GenerateStructurePacket", "SB_KeepAlivePacket", "LockDifficultyPacket",
-    "PlayerPositionPacket", "PlayerPositionAndRotationPacket", "PlayerRotationPacket", "PlayerMovementPacket", "SB_VehicleMovePacket", "SteerBoatPacket",
-    "PickItemPacket", "CraftRecipeRequestPacket", "SB_PlayerAbilitiesPacket", "PlayerDiggingPacket", "EntityActionPacket", "SteerVehiclePacket",
-    "SetRecipeBookStatePacket", "SetDisplayedRecipePacket", "NameItemPacket", "ResourcePackStatusPacket", "AdvancementTabPacket", "SelectTradePacket",
-    "SetBeaconEffectPacket", "SB_HeldItemChangePacket", "UpdateCommandBlockPacket", "UpdateCommandBlockMinecartPacket", "CreativeInventoryActionPacket",
-    "UpdateJigsawBlockPacket", "UpdateStructureBlockPacket", "UpdateSignPacket", "AnimationPacket", " SpectatePacket", "PlayerBlockPlacementPacket",
-    "UseItemPacket"
+export enum SB_PlayPackets {
+    TeleportConfirmPacket, TabCompletePacket, ChatMessagePacket, ClientStatusPacket, ClientSettingsPacket, ConfirmTransactionPacket,
+    EnchantItemPacket, ClickWindowPacket, CloseWindowPacket, PluginMessagePacket, UseEntityPacket, KeepAlivePacket, PlayerPacket,
+    PlayerPositionPacket, PlayerPositionAndLookPacket, PlayerLookPacket, VehicleMovePacket, SteerBoartPacket, CraftRecipeRequestPacket,
+    PlayerAbilitiesPacket, PlayerDiggingPacket, EntityActionPacket, SteerVehiclePacket, CraftingBookDataPacket, ResourcePackStatusPacket,
+    AdvancementTabPacket, HeldItemChangePacket, CreativeInventoryActionPacket, UpdateSignPacket, AnimationPacket, SpectatePacket,
+    PlayerBlockPlacementPacket, UseItemPacket
 }
 
 export function makePacket(id: number, sections: (Buffer|number[])[], status: State) {
@@ -122,6 +135,28 @@ export function makePacket(id: number, sections: (Buffer|number[])[], status: St
     logPacket(id, status, b.length, true);
 
     return Buffer.from(sec);
+}
+
+export function makeInt(n: number): number[] {
+    const b = Buffer.alloc(4);
+    b.writeInt32BE(n);
+    return Array.from(b);
+}
+
+export function makeDouble(n: number): number[] {
+    const b = Buffer.alloc(8);
+    b.writeDoubleBE(n);
+    return Array.from(b);
+}
+
+export function makeFloat(n: number): number[] {
+    const b = Buffer.alloc(4);
+    b.writeFloatBE(n);
+    return Array.from(b);
+}
+
+export function makeBoolean(b: boolean): number[] {
+    return [(b ? 1 : 0)];
 }
 
 export function makeString(s: string): Buffer {
@@ -154,33 +189,28 @@ const packetNames = [
 
     { // play
         clientbound: [
-            "SpawnEntityPacket", "SpawnExperienceOrbPacket", "SpawnLivingEntityPacket", "SpawnPaintingPacket", "SpawnPlayerPacket",
-            "EntityAnimationPacket", "StatisticsPacket", "AcknowledgePlayerDiggingPacket", "BlockBreakAnimationPacket", "BlockEntityDataPacket",
-            "BlockActionPacket", "BlockChangePacket", "BossBarPacket", "ServerDifficultyPacket", "ChatMessagePacket", "TabCompletePacket",
-            "DeclareCommandsPacket", "WindowConfirmationPacket", "CloseWindowPacket", "WindowItemsPacket", "WindowPropertyPacket", "SetSlotPacket",
-            "SetCooldownPacket", "PluginMessagePacket", "NamedSoundEffectPacket", "DisconnectPacket", "EntityStatusPacket", "ExplosionPacket",
-            "UnloadChunkPacket", "ChangeGameStatePacket", "OpenHorseWindowPacket", "KeepAlivePacket", "ChunkDataPacket", "EffectPacket", "ParticlePacket",
-            "UpdateLightPacket", "JoinGamePacket", "MapDataPacket", "TradeListPacket", "EntityPositionPacket", "EntityPositionAndRotationPacket",
-            "EntityRotationPacket", "EntityMovementPacket", "VehicleMovePacket", "OpenBookPacket", "OpenWindowPacket", "OpenSignEditorPacket",
-            "CraftRecipeResponsePacket", "PlayerAbilitiesPacket", "CombatEventPacket", "PlayerInfoPacket", "FacePlayerPacket", "PlayerPositionAndLookPacket",
-            "UnlockRecipesPacket", "DestroyEntitiesPacket", "RemoveEntityEffectPacket", "ResourcePackSendPacket", "RespawnPacket", "EntityHeadLookPacket",
-            "MultiBlockChangePacket", "SelectAdvancementTabPacket", "WorldBorderPacket", "CameraPacket", "HeldItemChangePacket", "UpdateViewPositionPacket",
-            "UpdateViewDistancePacket", "SpawnPositionPacket", "DisplayScoreboardPacket", "EntityMetadataPacket", "AttachEntityPacket", "EntityVelocityPacket",
-            "EntityEquipmentPacket", "SetExperiencePacket", "UpdateHealth", "ScoreboardObjectivePacket", "SetPassengersPacket", "TeamsPacket", "UpdateScorePacket",
-            "TimeUpdatePacket", "TitlePacket", "EntitySoundEffectPacket", "SoundEffectPacket", "StopSoundPacket", "PlayerListHeaderAndFooter",
-            "NBTQueryResponsePacket", "CollectItemPacket", "EntityTeleportPacket", "AdvancementsPacket", "EntityPropertiesPacket", "EntityEffectPacket",
-            "DeclareRecipesPacket", "TagsPacket"
+            "SpawnObjectPacket", "SpawnExperienceOrbPacket", "SpawnGlobalEntityPacket", "SpawnMobPacket",
+            "SpawnPaintingPacket", "SpawnPlayerPacket", "AnimationPacket", "StatisticsPacket", "BlockBreakAnimationPacket",
+            "UpdateBlockEntityPacket", "BlockActionPacket", "BlockChangePacket", "BossBarPacket", "ServerDifficultyPacket",
+            "TabCompletePacket", "ChatMessagePacket", "MultiBlockChangePacket", "ConfirmTransactionPacket", "CloseWindowPacket",
+            "OpenWindowPacket", "WindowItemsPacket", "WindowPropertyPacket", "SetSlotPacket", "SetCooldownPacket", "PluginMessagePacket",
+            "NamedSoundEffectPacket", "DisconnectPacket", "EntityStatusPacket", "ExplosionPacket", "UnloadChunkPacket", "ChangeGameStatePacket",
+            "KeepAlivePacket", "ChunkDataPacket", "EffectPacket", "ParticlePacket", "JoinGamePacket", "MapPacket", "EntityPacket", "EntityRelativeMovePacket",
+            "EntityLookAndRelativeMovePacket", "EntityLookPacket", "VehicleMovePacket", "OpenSignEditorPacket", "CraftRecipeResponsePacket",
+            "PlayerAbilitiesPacket", "CombatEventPacket", "PlayerListItemPacket", "PlayerPositionAndLookPacket", "UseBedPacket", "UnlockRecipesPacket",
+            "DestroyEntitiesPacket", "RemoveEntityEffectPacket", "ResourcePackSendPacket", "RespawnPacket", "EntityHeadLookPacket", "SelectAdvancementTabPacket",
+            "WorldBorderPacket", "CameraPacket", "HeldItemChangePacket", "DisplayScoreboardPacket", "EntityMetadataPacket", "AttachEntityPacket", "EntityVelocityPacket",
+            "EntityEquipmentPacket", "SetExperiencePacket", "UpdateHealthPacket", "ScoreboardObjectivePacket", "SetPassengersPacket", "TeamsPacket", "UpdateScorePacket",
+            "SpawnPositionPacket", "TimeUpdatePacket", "TitlePacket", "SoundEffectPacket", "PlayerListHeaderAndFooterPacket", "CollectItemPacket", "EntityTeleportPacket",
+            "AdvancementsPacket", "EntityPropertiesPacket", "EntityEffectPacket"
         ],
         serverbound: [
-            "TeleportConfirmPacket", "QueryBlockNBTPacket", "SetDifficultyPacket", "ChatMessagePacket", "ClientStatusPacket", "ClientSettingsPacket",
-            "TabCompletePacket", "WindowConfirmationPacket", "ClickWindowButtonPacket", "ClickWindowPacket", "CloseWindowPacket", "PluginMessagePacket",
-            "EditBookPacket", "QueryEntityNBTPacket", "InteractEntityPacket", "GenerateStructurePacket", "KeepAlivePacket", "LockDifficultyPacket",
-            "PlayerPositionPacket", "PlayerPositionAndRotationPacket", "PlayerRotationPacket", "PlayerMovementPacket", "VehicleMovePacket", "SteerBoatPacket",
-            "PickItemPacket", "CraftRecipeRequestPacket", "PlayerAbilitiesPacket", "PlayerDiggingPacket", "EntityActionPacket", "SteerVehiclePacket",
-            "SetRecipeBookStatePacket", "SetDisplayedRecipePacket", "NameItemPacket", "ResourcePackStatusPacket", "AdvancementTabPacket", "SelectTradePacket",
-            "SetBeaconEffectPacket", "HeldItemChangePacket", "UpdateCommandBlockPacket", "UpdateCommandBlockMinecartPacket", "CreativeInventoryActionPacket",
-            "UpdateJigsawBlockPacket", "UpdateStructureBlockPacket", "UpdateSignPacket", "AnimationPacket", " SpectatePacket", "PlayerBlockPlacementPacket",
-            "UseItemPacket"
+            "TeleportConfirmPacket", "TabCompletePacket", "ChatMessagePacket", "ClientStatusPacket", "ClientSettingsPacket", "ConfirmTransactionPacket",
+            "EnchantItemPacket", "ClickWindowPacket", "CloseWindowPacket", "PluginMessagePacket", "UseEntityPacket", "KeepAlivePacket", "PlayerPacket",
+            "PlayerPositionPacket", "PlayerPositionAndLookPacket", "PlayerLookPacket", "VehicleMovePacket", "SteerBoartPacket", "CraftRecipeRequestPacket",
+            "PlayerAbilitiesPacket", "PlayerDiggingPacket", "EntityActionPacket", "SteerVehiclePacket", "CraftingBookDataPacket", "ResourcePackStatusPacket",
+            "AdvancementTabPacket", "HeldItemChangePacket", "CreativeInventoryActionPacket", "UpdateSignPacket", "AnimationPacket", "SpectatePacket",
+            "PlayerBlockPlacementPacket", "UseItemPacket"
         ]
     }
 ];

@@ -4,10 +4,15 @@ import * as crypto from 'crypto';
 import * as net from 'net';
 
 // Local Files
-import { State, HandshakePackets, StatusPackets, makePacket, logPacket, LoginPackets, PlayPackets } from './commons';
-import { LoginSuccessPacket, StatusResponsePacket } from './packet';
+import { State, HandshakePackets, StatusPackets, makePacket, logPacket, LoginPackets, PlayPackets, SB_PlayPackets, ServerStorage } from './commons';
+import { ChunkDataPacket, JoinGamePacket, LoginSuccessPacket, PlayerPositionAndLook, StatusResponsePacket } from './packet';
+import { BlockState, Blocks, Chunk } from './chunk';
 
 const server = new net.Server();
+const storage: ServerStorage = {
+    players: [],
+    entities: []
+};
 
 server.on('connection', (s) => {
     const uuid = crypto.randomUUID();
@@ -62,8 +67,8 @@ server.on('connection', (s) => {
                             },
                             previewsChat: false,
                             verion: {
-                                name: "1.16.5",
-                                protocol: 754
+                                name: "1.12.2",
+                                protocol: 340
                             }
                         }) ], state));
                     break; }
@@ -81,29 +86,35 @@ server.on('connection', (s) => {
                         const username = d.subarray(offset, offset+usernameLength).toString(); offset+=usernameLength;
 
                         s.write(makePacket(LoginPackets.LoginSuccessPacket, [ LoginSuccessPacket(username, uuid) ], state));
-
+                        
                         state = State.PLAY;
+                        s.write(makePacket(PlayPackets.JoinGamePacket, [ JoinGamePacket(100, 1, 2) ], state)); // send JoinGame packet
 
-                        // Wait an arbitrary(-ish) amount of time to wait for the client to do it's thing
-                        setTimeout(() => {
-                            // Send the JoinGamePacket here, then do chunk stuff later
-                        }, 500);
+                        // Send chunks here
+                        let chunk = new Chunk();
+                        chunk.set(new BlockState(1, 0), 0, 0, 0);
+                        s.write(makePacket(PlayPackets.ChunkDataPacket, [ ChunkDataPacket(0, 0, chunk) ], state));
+
+                        s.write(makePacket(PlayPackets.PlayerPositionAndLookPacket, [ PlayerPositionAndLook(0, 128, 0, 0, 0) ], state));
 
                         keepAliveInterval = setInterval(() => {
                             s.write(makePacket(PlayPackets.KeepAlivePacket, [Buffer.from([0,0,16,16,0,16,0,16])], state));
-                            // s.write(makePacket(PlayPackets.KeepAlivePacket, [ [ 0, 0, 0, 0, 32, 32, 32, 32, 0, 0, 0, 0, 32, 32, 32, 32 ] ], state));
                         }, 5000);
                     break; }
                 }
             break;
             
             case State.PLAY:
-                switch(id as PlayPackets) {
-                    
+                switch(id as SB_PlayPackets) {
+                    case SB_PlayPackets.KeepAlivePacket: {
+                        // Do something involving automatically kicking the client
+                    break; }
                 }
             break;
         }
     });
 });
 
-server.listen(25565);
+server.listen(25565, () => {
+    console.log(`TCP Server listening on port 25565.`);
+});

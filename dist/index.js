@@ -30,7 +30,12 @@ const net = __importStar(require("net"));
 // Local Files
 const commons_1 = require("./commons");
 const packet_1 = require("./packet");
+const chunk_1 = require("./chunk");
 const server = new net.Server();
+const storage = {
+    players: [],
+    entities: []
+};
 server.on('connection', (s) => {
     const uuid = crypto.randomUUID();
     let state = commons_1.State.HANDSHAKING;
@@ -82,8 +87,8 @@ server.on('connection', (s) => {
                                 },
                                 previewsChat: false,
                                 verion: {
-                                    name: "1.16.5",
-                                    protocol: 754
+                                    name: "1.12.2",
+                                    protocol: 340
                                 }
                             })], state));
                         break;
@@ -104,13 +109,14 @@ server.on('connection', (s) => {
                         offset += usernameLength;
                         s.write((0, commons_1.makePacket)(commons_1.LoginPackets.LoginSuccessPacket, [(0, packet_1.LoginSuccessPacket)(username, uuid)], state));
                         state = commons_1.State.PLAY;
-                        // Wait an arbitrary(-ish) amount of time to wait for the client to do it's thing
-                        setTimeout(() => {
-                            // Send the JoinGamePacket here, then do chunk stuff later
-                        }, 500);
+                        s.write((0, commons_1.makePacket)(commons_1.PlayPackets.JoinGamePacket, [(0, packet_1.JoinGamePacket)(100, 1, 2)], state)); // send JoinGame packet
+                        // Send chunks here
+                        let chunk = new chunk_1.Chunk();
+                        chunk.set(new chunk_1.BlockState(1, 0), 0, 0, 0);
+                        s.write((0, commons_1.makePacket)(commons_1.PlayPackets.ChunkDataPacket, [(0, packet_1.ChunkDataPacket)(0, 0, chunk)], state));
+                        s.write((0, commons_1.makePacket)(commons_1.PlayPackets.PlayerPositionAndLookPacket, [(0, packet_1.PlayerPositionAndLook)(0, 128, 0, 0, 0)], state));
                         keepAliveInterval = setInterval(() => {
                             s.write((0, commons_1.makePacket)(commons_1.PlayPackets.KeepAlivePacket, [Buffer.from([0, 0, 16, 16, 0, 16, 0, 16])], state));
-                            // s.write(makePacket(PlayPackets.KeepAlivePacket, [ [ 0, 0, 0, 0, 32, 32, 32, 32, 0, 0, 0, 0, 32, 32, 32, 32 ] ], state));
                         }, 5000);
                         break;
                     }
@@ -118,9 +124,15 @@ server.on('connection', (s) => {
                 break;
             case commons_1.State.PLAY:
                 switch (id) {
+                    case commons_1.SB_PlayPackets.KeepAlivePacket: {
+                        // Do something involving automatically kicking the client
+                        break;
+                    }
                 }
                 break;
         }
     });
 });
-server.listen(25565);
+server.listen(25565, () => {
+    console.log(`TCP Server listening on port 25565.`);
+});
